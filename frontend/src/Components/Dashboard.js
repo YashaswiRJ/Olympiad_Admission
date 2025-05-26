@@ -13,15 +13,15 @@ const Dashboard = () => {
       icon: '📄'
     },
     {
-      title: 'Validate & Generate Ranking',
-      description: 'Process and validate rankings based on uploaded data',
-      path: '/validate-and-generate-rank',
+      title: 'Validate Branch Preferences',
+      description: 'Validates the preferences of the students based on eligibility',
+      path: '/validate',
       icon: '📊'
     },
     {
-      title: 'Generate Seat Allocation',
-      description: 'Automated seat allocation based on rankings and criteria',
-      path: '/generate-seat-allocation',
+      title: 'Generate Rankings',
+      description: 'Generates the rankings of the students based on their performance in the test',
+      path: '/ranking',
       icon: '🎓'
     },
     {
