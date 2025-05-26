@@ -9,7 +9,8 @@ const Sidebar = () => {
   const menuItems = [
     { path: '/', label: 'Dashboard', icon: '📊' },
     { path: '/upload-csv', label: 'Upload Student Data', icon: '📄' },
-    { path: '/validate-and-generate-rank', label: 'Validate & Generate Rank', icon: '✅' },
+    { path: '/validate-preferences', label: 'Validate Preferences', icon: '✅' },
+    { path: '/validate-and-generate-rank', label: 'Validate & Generate Rank', icon: '📈' },
     { path: '/upload-seat-matrix', label: 'Upload Seat Matrix', icon: '💺' },
     { path: '/generate-seat-allocation', label: 'Generate Seat Allocation', icon: '🎯' }
   ];
