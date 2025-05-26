@@ -1,0 +1,155 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{enumitem}
+
+\title{Software Requirements Specification\\
+       Olympiad Admission System}
+\author{IIT Kanpur}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+\newpage
+
+\section{Introduction}
+\subsection{Purpose}
+This document outlines the software requirements for the Olympiad Admission System, a web-based application designed to manage student admissions based on Olympiad performance and preferences.
+
+\subsection{Scope}
+The system will handle:
+\begin{itemize}
+    \item Student data management through CSV uploads
+    \item Preference-based admission processing
+    \item Seat allocation based on merit and preferences
+    \item Result generation and validation
+\end{itemize}
+
+\section{System Requirements}
+
+\subsection{Functional Requirements}
+
+\subsubsection{Data Input Module}
+\begin{enumerate}[label=FR\arabic*.]
+    \item The system shall accept CSV files containing student data
+    \item Required CSV columns:
+    \begin{itemize}
+        \item Student ID (unique identifier)
+        \item Name
+        \item Total Marks
+        \item Positive Marks
+        \item Subject-wise Marks (Mathematics, Physics, Chemistry)
+        \item Olympiad Qualifications (IMOTC, IOITC, INPHO, INCHO, INBO)
+        \item Branch Preferences
+    \end{itemize}
+    \item File size limit: 10MB
+    \item Data validation for all required fields
+    \item Automatic calculation of Science Olympiad (SO) status
+\end{enumerate}
+
+\subsubsection{Data Management Module}
+\begin{enumerate}[label=FR\arabic*., start=6]
+    \item Paginated display of student records (10 per page)
+    \item Search functionality by name and ID
+    \item Row removal capability
+    \item Data persistence with 2-hour expiration
+    \item Automatic data recovery on page reload
+\end{enumerate}
+
+\subsubsection{User Interface Module}
+\begin{enumerate}[label=FR\arabic*., start=11]
+    \item Collapsible navigation sidebar
+    \item Drag-and-drop file upload interface
+    \item Visual feedback for all operations
+    \item Responsive design for various screen sizes
+    \item Tooltips for collapsed navigation items
+\end{enumerate}
+
+\subsection{Non-Functional Requirements}
+
+\subsubsection{Performance Requirements}
+\begin{enumerate}[label=NFR\arabic*.]
+    \item Handle up to 1000 student records efficiently
+    \item Page load time under 2 seconds
+    \item Search results update in real-time
+    \item Smooth animations (60fps)
+\end{enumerate}
+
+\subsubsection{Security Requirements}
+\begin{enumerate}[label=NFR\arabic*., start=5]
+    \item Local storage encryption for sensitive data
+    \item Input validation for all file uploads
+    \item Protection against XSS attacks
+    \item Secure data handling practices
+\end{enumerate}
+
+\subsubsection{Usability Requirements}
+\begin{enumerate}[label=NFR\arabic*., start=9]
+    \item Intuitive navigation
+    \item Clear error messages
+    \item Consistent UI elements
+    \item Accessibility compliance
+\end{enumerate}
+
+\section{System Constraints}
+
+\subsection{Technical Constraints}
+\begin{itemize}
+    \item Browser compatibility: Chrome, Firefox, Safari, Edge
+    \item Local storage availability
+    \item JavaScript enabled
+    \item Modern CSS support
+\end{itemize}
+
+\subsection{Business Constraints}
+\begin{itemize}
+    \item Data retention policies
+    \item Admission process timeline
+    \item Resource limitations
+    \item Regulatory compliance
+\end{itemize}
+
+\section{Future Enhancements}
+\begin{itemize}
+    \item Server-side storage integration
+    \item Advanced filtering capabilities
+    \item Dark mode support
+    \item Multi-file upload support
+    \item Export functionality
+    \item Real-time collaboration features
+\end{itemize}
+
+\section{Appendix}
+
+\subsection{Data Definitions}
+\begin{lstlisting}[language=JavaScript]
+// Student Record Structure
+{
+    id: string,
+    name: string,
+    total_marks: number,
+    positive_marks: number,
+    maths_marks: number,
+    physics_marks: number,
+    chemistry_marks: number,
+    imotc: boolean,
+    ioitc: boolean,
+    inpho: boolean,
+    incho: boolean,
+    inbo: boolean,
+    preference_order: string
+}
+\end{lstlisting}
+
+\subsection{CSV Format}
+\begin{lstlisting}
+id,name,total_marks,positive_marks,maths_marks,physics_marks,chemistry_marks,imotc,ioitc,inpho,incho,inbo,preference_order
+\end{lstlisting}
+
+\end{document} 

@@ -1,0 +1,119 @@
+.validate-ranking-container {
+    max-width: 1200px;
+    margin: 2.5rem auto;
+    padding: 0 1.5rem;
+    background: #f8fafc;
+    border-radius: 18px;
+    box-shadow: 0 4px 24px rgba(44, 62, 80, 0.07);
+}
+
+.validate-ranking-container h2 {
+    color: #22304a;
+    margin-bottom: 2.5rem;
+    text-align: center;
+    font-size: 2.3rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.validate-ranking-container h3 {
+    color: #34495e;
+    margin: 2rem 0 1rem 0;
+    font-size: 1.35rem;
+    font-weight: 600;
+}
+
+.table-container {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(44, 62, 80, 0.06);
+    overflow-x: auto;
+    margin-bottom: 2.5rem;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 1rem;
+    min-width: 700px;
+}
+
+.data-table th,
+.data-table td {
+    padding: 1.1rem 1.2rem;
+    text-align: left;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.data-table th {
+    background-color: #f3f6fa;
+    font-weight: 700;
+    color: #22304a;
+    letter-spacing: 0.2px;
+}
+
+.data-table tr:hover {
+    background-color: #f6fbff;
+    transition: background 0.2s;
+}
+
+.validation-section {
+    display: flex;
+    justify-content: center;
+    margin: 2.5rem 0 1.5rem 0;
+}
+
+.validate-button {
+    background: linear-gradient(90deg, #3498db 0%, #2ecc71 100%);
+    color: #fff;
+    border: none;
+    padding: 1rem 2.2rem;
+    border-radius: 7px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(52, 152, 219, 0.08);
+    transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+}
+
+.validate-button:hover {
+    background: linear-gradient(90deg, #2980b9 0%, #27ae60 100%);
+    box-shadow: 0 4px 16px rgba(52, 152, 219, 0.13);
+    transform: translateY(-2px) scale(1.03);
+}
+
+.validate-button:disabled {
+    background: #bdc3c7;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.error-message {
+    background-color: #fee2e2;
+    color: #dc2626;
+    padding: 1rem 1.5rem;
+    border-radius: 6px;
+    margin: 1.2rem 0;
+    text-align: center;
+    font-weight: 500;
+    font-size: 1.05rem;
+}
+
+.result-section {
+    margin-top: 2.5rem;
+}
+
+@media (max-width: 900px) {
+    .validate-ranking-container {
+        margin: 1rem auto;
+        padding: 0 0.5rem;
+    }
+    .data-table {
+        font-size: 0.95rem;
+        min-width: 500px;
+    }
+    .data-table th,
+    .data-table td {
+        padding: 0.7rem 0.6rem;
+    }
+} 

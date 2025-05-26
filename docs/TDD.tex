@@ -1,0 +1,291 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{tikz}
+\usepackage{float}
+\usepackage{enumitem}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+
+\lstdefinestyle{mystyle}{
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    keepspaces=true,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+
+\title{Technical Design Document\\
+       Olympiad Admission System}
+\author{IIT Kanpur}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+\section{System Architecture}
+\subsection{Overview}
+The Olympiad Admission System is built using React.js with a component-based architecture. The system operates entirely on the client side, utilizing browser's localStorage for data persistence.
+
+\subsection{Component Hierarchy}
+\begin{verbatim}
+App
+├── Sidebar
+└── Main Content
+    ├── Dashboard
+    ├── UploadCSV
+    │   ├── FileUpload
+    │   ├── DataTable
+    │   └── Pagination
+    ├── ValidateRanking
+    ├── SeatAllocation
+    └── UploadSeatMatrix
+\end{verbatim}
+
+\section{Component Specifications}
+
+\subsection{App Component}
+\begin{lstlisting}[language=JavaScript]
+// App.js
+function App() {
+  return (
+    <Router>
+      <div className="app">
+        <Sidebar />
+        <div className="main-content">
+          <Routes>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/upload-csv" element={<UploadCSV />} />
+            {/* Additional routes */}
+          </Routes>
+        </div>
+      </div>
+    </Router>
+  );
+}
+\end{lstlisting}
+
+\subsection{Sidebar Component}
+\begin{lstlisting}[language=JavaScript]
+// Sidebar.js
+const Sidebar = () => {
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  
+  return (
+    <div className={`sidebar ${isCollapsed ? 'collapsed' : ''}`}>
+      {/* Navigation items */}
+    </div>
+  );
+};
+\end{lstlisting}
+
+\subsection{UploadCSV Component}
+Key features and implementations:
+
+\subsubsection{State Management}
+\begin{lstlisting}[language=JavaScript]
+const [csvData, setCsvData] = useState([]);
+const [processedData, setProcessedData] = useState([]);
+const [currentPage, setCurrentPage] = useState(1);
+const [searchTerm, setSearchTerm] = useState('');
+const [entriesPerPage] = useState(10);
+\end{lstlisting}
+
+\subsubsection{Data Processing}
+\begin{lstlisting}[language=JavaScript]
+const processCSV = (csv) => {
+  // CSV parsing logic
+  // Data validation
+  // State updates
+};
+\end{lstlisting}
+
+\section{Data Flow}
+
+\subsection{CSV Processing Pipeline}
+\begin{enumerate}
+    \item File Upload
+    \begin{lstlisting}[language=JavaScript]
+    const handleFileUpload = (event) => {
+      const file = event.target.files[0];
+      const reader = new FileReader();
+      reader.onload = (e) => processCSV(e.target.result);
+      reader.readAsText(file);
+    };
+    \end{lstlisting}
+
+    \item Data Validation
+    \begin{lstlisting}[language=JavaScript]
+    const validateHeaders = (headers) => {
+      const required = ['id', 'name', /* other fields */];
+      return required.every(field => 
+        headers.includes(field));
+    };
+    \end{lstlisting}
+
+    \item Data Transformation
+    \begin{lstlisting}[language=JavaScript]
+    const transformData = (rawData) => {
+      return rawData.map(row => ({
+        ...row,
+        so: calculateSO(row)
+      }));
+    };
+    \end{lstlisting}
+\end{enumerate}
+
+\section{Storage Implementation}
+
+\subsection{Local Storage Structure}
+\begin{lstlisting}[language=JavaScript]
+const saveData = () => {
+  const dataToSave = {
+    data: processedData,
+    timestamp: new Date().getTime(),
+    expiresAt: new Date().getTime() + (2 * 60 * 60 * 1000)
+  };
+  localStorage.setItem('processedData', 
+    JSON.stringify(dataToSave));
+};
+\end{lstlisting}
+
+\subsection{Data Recovery}
+\begin{lstlisting}[language=JavaScript]
+useEffect(() => {
+  const savedData = localStorage.getItem('processedData');
+  if (savedData) {
+    const parsed = JSON.parse(savedData);
+    if (parsed.expiresAt > new Date().getTime()) {
+      setProcessedData(parsed.data);
+    }
+  }
+}, []);
+\end{lstlisting}
+
+\section{UI/UX Implementation}
+
+\subsection{Responsive Design}
+\begin{lstlisting}[language=CSS]
+.main-content {
+  margin-left: 250px;
+  transition: margin-left 0.3s ease;
+}
+
+.sidebar.collapsed + .main-content {
+  margin-left: 70px;
+}
+\end{lstlisting}
+
+\subsection{Animations}
+\begin{lstlisting}[language=CSS]
+@keyframes slideDown {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.notification-card {
+  animation: slideDown 0.3s ease;
+}
+\end{lstlisting}
+
+\section{Performance Optimizations}
+
+\subsection{Data Processing}
+\begin{itemize}
+    \item Efficient CSV parsing using string operations
+    \item Memoization of expensive calculations
+    \item Pagination to handle large datasets
+    \item Debounced search functionality
+\end{itemize}
+
+\subsection{Rendering Optimizations}
+\begin{itemize}
+    \item Conditional rendering
+    \item List virtualization
+    \item CSS transitions instead of JS animations
+    \item Efficient state updates
+\end{itemize}
+
+\section{Error Handling}
+
+\subsection{File Upload Errors}
+\begin{lstlisting}[language=JavaScript]
+try {
+  // File processing
+} catch (error) {
+  setMessage('Error processing file: ' + error.message);
+  setMessageType('error');
+}
+\end{lstlisting}
+
+\subsection{Data Validation Errors}
+\begin{lstlisting}[language=JavaScript]
+const validateData = (data) => {
+  const errors = [];
+  // Validation logic
+  return errors.length ? { valid: false, errors } 
+                      : { valid: true };
+};
+\end{lstlisting}
+
+\section{Testing Strategy}
+
+\subsection{Unit Tests}
+\begin{lstlisting}[language=JavaScript]
+describe('CSV Processing', () => {
+  test('validates headers correctly', () => {
+    const headers = ['id', 'name', /* ... */];
+    expect(validateHeaders(headers)).toBe(true);
+  });
+});
+\end{lstlisting}
+
+\subsection{Integration Tests}
+\begin{itemize}
+    \item Route navigation testing
+    \item Data flow verification
+    \item Component interaction testing
+    \item Storage integration testing
+\end{itemize}
+
+\section{Deployment}
+
+\subsection{Build Process}
+\begin{verbatim}
+npm run build
+  ├── Minification
+  ├── Code splitting
+  ├── Asset optimization
+  └── Bundle generation
+\end{verbatim}
+
+\subsection{Performance Monitoring}
+\begin{itemize}
+    \item Load time tracking
+    \item Memory usage monitoring
+    \item Error tracking
+    \item User interaction analytics
+\end{itemize}
+
+\end{document} 

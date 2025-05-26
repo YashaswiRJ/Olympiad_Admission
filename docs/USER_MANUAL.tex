@@ -1,0 +1,122 @@
+% --- Updated User Manual for Olympiad Admission System ---
+% Industry-standard formatting and up-to-date features
+
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{Olympiad Admission System}
+\lhead{User Manual}
+\rfoot{Page \thepage}
+
+\title{User Manual\\
+       Olympiad Admission System}
+\author{IIT Kanpur}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+\newpage
+
+\section{Introduction}
+
+\subsection{About the System}
+The Olympiad Admission System is a modern web application for managing student admissions based on Olympiad performance and branch preferences. It features a professional, responsive UI and robust data management.
+
+\subsection{System Requirements}
+\begin{itemize}
+    \item Modern web browser (Chrome, Firefox, Safari, Edge)
+    \item JavaScript enabled
+    \item Minimum screen resolution: 1024x768
+    \item Internet connection for initial loading
+\end{itemize}
+
+\section{Getting Started}
+
+\subsection{Accessing the System}
+\begin{enumerate}
+    \item Open your web browser
+    \item Navigate to the application URL (e.g., http://localhost:3000)
+    \item The dashboard will load by default
+\end{enumerate}
+
+\subsection{Navigation}
+The sidebar provides access to all major modules:
+\begin{itemize}
+    \item Dashboard (\includegraphics[height=1em]{dashboard.png})
+    \item Upload Student Data (\includegraphics[height=1em]{upload.png})
+    \item Validate \& Generate Rank (\includegraphics[height=1em]{validate.png})
+    \item Upload Seat Matrix (\includegraphics[height=1em]{matrix.png})
+    \item Generate Seat Allocation (\includegraphics[height=1em]{allocation.png})
+\end{itemize}
+
+\section{Uploading Student Data}
+\subsection{CSV Format}
+\begin{lstlisting}
+id,name,total_marks,positive_marks,maths_marks,physics_marks,chemistry_marks,imotc,ioitc,inpho,incho,inbo,preference_order
+1,John Doe,450,430,150,140,140,1,0,1,0,0,"CSE,MTH,ECO,SDS"
+\end{lstlisting}
+
+\subsection{Upload Process}
+\begin{enumerate}
+    \item Go to "Upload Student Data"
+    \item Drag and drop or select your CSV file
+    \item The system validates and displays your data in a scrollable, paginated table
+    \item Use the search bar to filter by name or ID
+    \item Remove unwanted rows with the "Remove" button
+    \item Click "Save Data" to persist changes (data is stored for 2 hours)
+\end{enumerate}
+
+\section{Validating and Generating Rankings}
+\subsection{Workflow}
+\begin{enumerate}
+    \item Navigate to "Validate \& Generate Rank"
+    \item The first 5 students from your uploaded data are shown as a sample
+    \item Click "Validate Student Preferences" to send data for backend validation
+    \item Results are displayed in a clean, responsive table
+    \item Errors are shown with clear messages
+\end{enumerate}
+
+\subsection{UI Features}
+\begin{itemize}
+    \item Modern, clean design with soft color palette
+    \item Responsive tables with horizontal scroll for many columns
+    \item Sticky action columns for easy row removal
+    \item Subtle hover and focus effects
+    \item Clear error and success notifications
+\end{itemize}
+
+\section{Other Modules}
+\subsection{Seat Matrix and Allocation}
+\begin{enumerate}
+    \item Upload seat matrix in the "Upload Seat Matrix" section
+    \item Generate seat allocation in the "Generate Seat Allocation" section
+    \item Review and save results as needed
+\end{enumerate}
+
+\section{Troubleshooting and Support}
+\subsection{Common Issues}
+\begin{itemize}
+    \item Invalid CSV format: Check column headers and file type
+    \item Data not saving: Check browser storage permissions
+    \item Validation errors: Review error messages and correct data
+\end{itemize}
+
+\subsection{Getting Help}
+\begin{itemize}
+    \item Refer to this manual
+    \item Contact the system administrator
+    \item Report issues via the support channel
+\end{itemize}
+
+\end{document} 
