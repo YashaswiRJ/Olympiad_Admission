@@ -1,4 +1,5 @@
 from app.static_data.olympiad_requirement import requirement_olympiad
+from copy import deepcopy
 
 def process_student(student):
     student_id = student['id']
@@ -11,7 +12,11 @@ def process_student(student):
         'student_id': student_id,
         'student_name': student_name,
         'final_preference_order': ', '.join(final_preference_order),
-        'removed_preference_order': ', '.join(removed_preference_order)
+        'removed_preference_order': ', '.join(removed_preference_order),
+        'total_marks': student['total_marks'],
+        'positive_marks': student['positive_marks'],
+        'maths_marks': student['maths_marks'],
+        'physics_marks': student['physics_marks']
     }
 
 
@@ -28,39 +33,48 @@ def validate_and_clean_students(students):
     }
     return sample_result
 
+from copy import deepcopy
+
 def generate_rankings(validation_data):
-    """
-    Generate rankings based on validated student data.
-    This function implements the ranking algorithm based on:
-    1. Student's final preference order
-    2. Number of valid preferences
-    3. Order of preferences
-    """
-    # Create a copy of the validation data to avoid modifying the original
-    rankings = validation_data.copy()
+    # Create a copy so original is not modified
+    print('validation_data', validation_data)
+    data = deepcopy(validation_data)
     
-    # Sort rankings based on:
-    # 1. Number of valid preferences (more is better)
-    # 2. Order of preferences (earlier is better)
-    for rank in rankings:
-        # Count number of valid preferences
-        valid_prefs = rank['final_preference_order'].split(', ')
-        rank['valid_preference_count'] = len(valid_prefs)
+    # Helper to parse and sort
+    def sort_key(student):
+        return (
+            -int(student['total_marks']),
+            -int(student['positive_marks']),
+            -int(student['maths_marks']),
+            -int(student['physics_marks'])
+        )
+    
+    # Sort using the custom key
+    sorted_data = sorted(data, key=sort_key)
+    
+    # Assign ranks (equal scores get same rank)
+    rankings = []
+    current_rank = 1
+    for i, student in enumerate(sorted_data):
+        if i > 0:
+            prev = sorted_data[i - 1]
+            # Check if any field differs from previous student
+            if any([
+                student['total_marks'] != prev['total_marks'],
+                student['positive_marks'] != prev['positive_marks'],
+                student['maths_marks'] != prev['maths_marks'],
+                student['physics_marks'] != prev['physics_marks']
+            ]):
+                current_rank = i + 1
         
-        # Store first preference for sorting
-        rank['first_preference'] = valid_prefs[0] if valid_prefs else ''
-    
-    # Sort by number of valid preferences (descending) and first preference
-    sorted_rankings = sorted(
-        rankings,
-        key=lambda x: (-x['valid_preference_count'], x['first_preference'])
-    )
-    
-    # Add rank number to each student
-    for i, rank in enumerate(sorted_rankings, 1):
-        rank['rank'] = i
-        # Remove temporary sorting fields
-        del rank['valid_preference_count']
-        del rank['first_preference']
-    
-    return sorted_rankings 
+        rankings.append({
+            'student_id': student['student_id'],
+            'student_name': student['student_name'],
+            'rank': current_rank,
+            'preference_order': student['final_preference_order']
+        })
+
+    return {
+        'received_students': len(validation_data),
+        'rankings': rankings
+    }

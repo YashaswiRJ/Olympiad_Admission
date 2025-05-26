@@ -3,9 +3,9 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Dashboard from './Components/Dashboard';
 import UploadCSV from './Components/UploadCSV';
 import SeatAllocation from './Components/SeatAllocation';
-import UploadSeatMatrix from './Components/UploadSeatMatrix';
 import Sidebar from './Components/Sidebar';
 import ValidationPreference from './Components/ValidationPreference';
+import RankingPage from './Components/RankingPage';
 
 function App() {
   return (
@@ -15,9 +15,9 @@ function App() {
         <div className="main-content">
           <Routes>
             <Route path="/" element={<Dashboard />} />
-            <Route path="/upload-csv" element={<UploadCSV />} />
-            <Route path="/validate-preferences" element={<ValidationPreference />} />
-            <Route path="/upload-seat-matrix" element={<UploadSeatMatrix />} />
+            <Route path="/upload" element={<UploadCSV />} />
+            <Route path="/validate" element={<ValidationPreference />} />
+            <Route path="/ranking" element={<RankingPage />} />
             <Route path="/generate-seat-allocation" element={<SeatAllocation />} />
           </Routes>
         </div>

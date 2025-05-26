@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { 
+    getProcessedData, 
+    validatePreferences, 
+    generateRankings, 
+    saveRankingData 
+} from '../services/service';
 import '../Styles/ValidationPreference.css';
 
 const ValidationPreference = () => {
@@ -15,10 +20,9 @@ const ValidationPreference = () => {
 
   useEffect(() => {
     // Load processed data from localStorage and get top 5 entries
-    const savedData = localStorage.getItem('processedData');
-    if (savedData) {
-      const parsedData = JSON.parse(savedData);
-      setSampleData(parsedData.data.slice(0, 5));
+    const savedData = getProcessedData();
+    if (savedData?.data) {
+      setSampleData(savedData.data.slice(0, 5));
     }
   }, []);
 
@@ -27,20 +31,15 @@ const ValidationPreference = () => {
       setLoading(true);
       setError(null);
       
-      const savedData = localStorage.getItem('processedData');
-      if (!savedData) {
+      const savedData = getProcessedData();
+      if (!savedData?.data) {
         throw new Error('No data found to validate');
       }
       
-      const parsedData = JSON.parse(savedData);
-      
-      const response = await axios.post('http://localhost:5000/api/validate-preferences', {
-        students: parsedData.data
-      });
-
-      setValidationResult(response.data.validation_result);
+      const response = await validatePreferences(savedData.data);
+      setValidationResult(response.validation_result);
     } catch (err) {
-      setError(err.response?.data?.error || 'An error occurred during validation');
+      setError(err.message || 'An error occurred during validation');
     } finally {
       setLoading(false);
     }
@@ -51,17 +50,11 @@ const ValidationPreference = () => {
       setLoading(true);
       setError(null);
       
-      const response = await axios.post('http://localhost:5000/api/generate-rankings', {
-        validation_data: validationResult
-      });
-
-      // Store ranking data in localStorage for the ranking page
-      localStorage.setItem('rankingData', JSON.stringify(response.data.rankings));
-      
-      // Navigate to ranking page
+      const response = await generateRankings(validationResult);
+      saveRankingData(response.rankings);
       navigate('/ranking');
     } catch (err) {
-      setError(err.response?.data?.error || 'An error occurred while generating rankings');
+      setError(err.message || 'An error occurred while generating rankings');
     } finally {
       setLoading(false);
     }
