@@ -1,4 +1,4 @@
-\documentclass[12pt]{article}
+\documentclass[12pt,a4paper]{article}
 \usepackage[utf8]{inputenc}
 \usepackage{graphicx}
 \usepackage{hyperref}
@@ -6,8 +6,7 @@
 \usepackage{color}
 \usepackage{enumitem}
 
-\title{Software Requirements Specification\\
-       Olympiad Admission System}
+\title{Software Requirements Specification\\Olympiad Admission System}
 \author{IIT Kanpur}
 \date{\today}
 
@@ -18,138 +17,89 @@
 \tableofcontents
 \newpage
 
+% 1. Introduction
 \section{Introduction}
 \subsection{Purpose}
-This document outlines the software requirements for the Olympiad Admission System, a web-based application designed to manage student admissions based on Olympiad performance and preferences.
+This document specifies the requirements for the Olympiad Admission System, a web-based platform for managing student admissions based on Olympiad performance and preferences.
 
 \subsection{Scope}
-The system will handle:
+The system supports:
 \begin{itemize}
-    \item Student data management through CSV uploads
-    \item Preference-based admission processing
-    \item Seat allocation based on merit and preferences
-    \item Result generation and validation
+    \item Student data upload and management via CSV
+    \item Preference validation and ranking using backend APIs
+    \item Seat matrix upload and allocation
+    \item Result review and export
 \end{itemize}
 
-\section{System Requirements}
+\subsection{Definitions, Acronyms, and Abbreviations}
+\begin{itemize}
+    \item API: Application Programming Interface
+    \item CSV: Comma-Separated Values
+    \item UI: User Interface
+    \item UX: User Experience
+\end{itemize}
 
+% 2. Overall Description
+\section{Overall Description}
+\subsection{Product Perspective}
+The system is a single-page web application with a React frontend and a Python backend. Data is validated and ranked via backend APIs. LocalStorage is used for session continuity.
+
+\subsection{Product Functions}
+\begin{itemize}
+    \item Upload and validate student data
+    \item Generate rankings based on validated preferences
+    \item Upload seat matrix and allocate seats
+    \item Review and export results
+\end{itemize}
+
+\subsection{User Characteristics}
+Intended for admission coordinators, faculty, and technical staff.
+
+\subsection{Constraints}
+\begin{itemize}
+    \item Browser compatibility: Chrome, Firefox, Safari, Edge
+    \item Internet connection required for backend API
+    \item JavaScript enabled
+\end{itemize}
+
+% 3. Specific Requirements
+\section{Specific Requirements}
 \subsection{Functional Requirements}
-
-\subsubsection{Data Input Module}
 \begin{enumerate}[label=FR\arabic*.]
-    \item The system shall accept CSV files containing student data
-    \item Required CSV columns:
+    \item The system shall accept CSV files with required columns:
     \begin{itemize}
-        \item Student ID (unique identifier)
-        \item Name
-        \item Total Marks
-        \item Positive Marks
-        \item Subject-wise Marks (Mathematics, Physics, Chemistry)
-        \item Olympiad Qualifications (IMOTC, IOITC, INPHO, INCHO, INBO)
-        \item Branch Preferences
+        \item id, name, total_marks, positive_marks, maths_marks, physics_marks, chemistry_marks, imotc, ioitc, inpho, incho, inbo, preference_order
     \end{itemize}
-    \item File size limit: 10MB
-    \item Data validation for all required fields
-    \item Automatic calculation of Science Olympiad (SO) status
-\end{enumerate}
-
-\subsubsection{Data Management Module}
-\begin{enumerate}[label=FR\arabic*., start=6]
-    \item Paginated display of student records (10 per page)
-    \item Search functionality by name and ID
-    \item Row removal capability
-    \item Data persistence with 2-hour expiration
-    \item Automatic data recovery on page reload
-\end{enumerate}
-
-\subsubsection{User Interface Module}
-\begin{enumerate}[label=FR\arabic*., start=11]
-    \item Collapsible navigation sidebar
-    \item Drag-and-drop file upload interface
-    \item Visual feedback for all operations
-    \item Responsive design for various screen sizes
-    \item Tooltips for collapsed navigation items
+    \item The system shall validate and clean data using backend API
+    \item The system shall store validation results in localStorage for session continuity
+    \item The system shall generate rankings by sending validated data to the backend API
+    \item The system shall display rankings in a paginated, searchable table
+    \item The system shall allow uploading and managing seat matrix
+    \item The system shall allocate seats based on uploaded matrix and rankings
+    \item The system shall provide clear error and success notifications
 \end{enumerate}
 
 \subsection{Non-Functional Requirements}
-
-\subsubsection{Performance Requirements}
 \begin{enumerate}[label=NFR\arabic*.]
-    \item Handle up to 1000 student records efficiently
-    \item Page load time under 2 seconds
-    \item Search results update in real-time
-    \item Smooth animations (60fps)
+    \item Responsive UI for various screen sizes
+    \item Data persistence for at least 2 hours via localStorage
+    \item Secure handling of user data
+    \item Accessibility for keyboard navigation
+    \item Real-time feedback for user actions
 \end{enumerate}
 
-\subsubsection{Security Requirements}
-\begin{enumerate}[label=NFR\arabic*., start=5]
-    \item Local storage encryption for sensitive data
-    \item Input validation for all file uploads
-    \item Protection against XSS attacks
-    \item Secure data handling practices
-\end{enumerate}
-
-\subsubsection{Usability Requirements}
-\begin{enumerate}[label=NFR\arabic*., start=9]
-    \item Intuitive navigation
-    \item Clear error messages
-    \item Consistent UI elements
-    \item Accessibility compliance
-\end{enumerate}
-
-\section{System Constraints}
-
-\subsection{Technical Constraints}
-\begin{itemize}
-    \item Browser compatibility: Chrome, Firefox, Safari, Edge
-    \item Local storage availability
-    \item JavaScript enabled
-    \item Modern CSS support
-\end{itemize}
-
-\subsection{Business Constraints}
-\begin{itemize}
-    \item Data retention policies
-    \item Admission process timeline
-    \item Resource limitations
-    \item Regulatory compliance
-\end{itemize}
-
-\section{Future Enhancements}
+\subsection{Future Enhancements}
 \begin{itemize}
     \item Server-side storage integration
-    \item Advanced filtering capabilities
-    \item Dark mode support
-    \item Multi-file upload support
-    \item Export functionality
-    \item Real-time collaboration features
+    \item Advanced filtering and export features
+    \item Multi-user collaboration
 \end{itemize}
 
 \section{Appendix}
-
-\subsection{Data Definitions}
-\begin{lstlisting}[language=JavaScript]
-// Student Record Structure
-{
-    id: string,
-    name: string,
-    total_marks: number,
-    positive_marks: number,
-    maths_marks: number,
-    physics_marks: number,
-    chemistry_marks: number,
-    imotc: boolean,
-    ioitc: boolean,
-    inpho: boolean,
-    incho: boolean,
-    inbo: boolean,
-    preference_order: string
-}
-\end{lstlisting}
-
-\subsection{CSV Format}
+\subsection{CSV Format Example}
 \begin{lstlisting}
 id,name,total_marks,positive_marks,maths_marks,physics_marks,chemistry_marks,imotc,ioitc,inpho,incho,inbo,preference_order
+1,John Doe,450,430,150,140,140,1,0,1,0,0,"CSE,MTH,ECO,SDS"
 \end{lstlisting}
 
 \end{document} 
