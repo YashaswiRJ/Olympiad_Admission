@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { generateSeatAllocation } from '../services/service';
 import '../Styles/SeatAllocation.css';
 
@@ -11,6 +11,25 @@ const SeatAllocation = () => {
   const [entriesPerPage] = useState(10);
   const [isLoading, setIsLoading] = useState(false);
 
+  useEffect(() => {
+    const fetchData = () => {
+      try {
+        const storedData = localStorage.getItem('seatAllocationData');
+        if (storedData) {
+          const parsedData = JSON.parse(storedData);
+          setAllocationData(parsedData.student_seat_allocation);
+        } else {
+          console.warn('No allocation data found in localStorage');
+        }
+      } catch (error) {
+        console.error('Error parsing allocation data:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
   const handleGenerateAllocation = async () => {
     try {
       setIsLoading(true);
@@ -22,11 +41,7 @@ const SeatAllocation = () => {
 
       const rankingData = JSON.parse(savedData);
       console.log('rankingData', rankingData)
-      const response = await generateSeatAllocation({
-        exam_id: 'exam1',
-        ranking_data: rankingData
-      });
-      console.log('Data aaya ki nyi?');
+      const response = await generateSeatAllocation(rankingData);
       console.log('response from backend', response)
 
       setAllocationData(response.student_seat_allocation);
@@ -44,15 +59,15 @@ const SeatAllocation = () => {
   const handleDownloadCSV = () => {
     if (!allocationData.length) return;
 
-    const headers = ['ID', 'Name', 'Rank', 'Pool Allotted', 'Branch'];
+    const headers = ['Rank', 'ID', 'Name', 'Pool Allotted', 'Program Allotted'];
     const csvContent = [
       headers.join(','),
       ...allocationData.map(row => [
+        row.rank,
         row.student_id,
         row.student_name,
-        row.rank,
-        row.pool_allotted,
-        row.program_allotted,
+        row.pool_alloted,
+        row.program_alloted,
         row.branch
       ].join(','))
     ].join('\n');
@@ -119,9 +134,9 @@ const SeatAllocation = () => {
             <table>
               <thead>
                 <tr>
+                  <th>Rank</th>
                   <th>ID</th>
                   <th>Name</th>
-                  <th>Rank</th>
                   <th>Pool Allotted</th>
                   <th>Program Allotted</th>
                 </tr>
@@ -130,9 +145,9 @@ const SeatAllocation = () => {
                 {currentEntries.map((item, index) => (
                   console.log('item', item),
                   <tr key={index}>
+                    <td>{item.rank}</td>
                     <td>{item.student_id}</td>
                     <td>{item.student_name}</td>
-                    <td>{item.rank}</td>
                     <td>{item.pool_alloted}</td>
                     <td>{item.program_alloted}</td>
                   </tr>

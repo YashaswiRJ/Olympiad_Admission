@@ -11,7 +11,7 @@ def generate_seat_allocation():
         
     try:
         print(request.get_json())
-        data = request.get_json().get('ranking_data').get('ranking_data')
+        data = request.get_json().get('ranking_data')
         print('Data retrived succesfully !', data[0])
         result = generateSeatAllocation(data)
         print('Successfully generated seat allocation !', result.get('program_seat_summary'))

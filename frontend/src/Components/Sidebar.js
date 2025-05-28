@@ -8,7 +8,7 @@ const Sidebar = () => {
 
   const menuItems = [
     { path: '/', label: 'Dashboard', icon: '📊' },
-    { path: '/upload', label: 'Upload Student Data', icon: '📄' },
+    { path: '/upload-csv', label: 'Upload Student Data', icon: '📄' },
     { path: '/validate', label: 'Validate Preferences', icon: '✅' },
     { path: '/ranking', label: 'View Rankings', icon: '📈' },
     { path: '/generate-seat-allocation', label: 'Generate Seat Allocation', icon: '🎯' }

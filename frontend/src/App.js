@@ -15,7 +15,7 @@ function App() {
         <div className="main-content">
           <Routes>
             <Route path="/" element={<Dashboard />} />
-            <Route path="/upload" element={<UploadCSV />} />
+            <Route path="/upload-csv" element={<UploadCSV />} />
             <Route path="/validate" element={<ValidationPreference />} />
             <Route path="/ranking" element={<RankingPage />} />
             <Route path="/generate-seat-allocation" element={<SeatAllocation />} />
