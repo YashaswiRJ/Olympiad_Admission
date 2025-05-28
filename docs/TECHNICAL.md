@@ -130,7 +130,7 @@ npm install  # This will install all dependencies from package.json
 4. Start the backend server:
 ```bash
 cd Backend
-python app.py
+python run.py
 ```
 5. Start the frontend development server:
 ```bash
