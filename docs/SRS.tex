@@ -1,14 +1,16 @@
 \documentclass[12pt,a4paper]{article}
+\usepackage{newtxtext,newtxmath}
 \usepackage[utf8]{inputenc}
 \usepackage{graphicx}
 \usepackage{hyperref}
 \usepackage{listings}
+\usepackage{newtxtext,newtxmath}
 \usepackage{color}
 \usepackage{enumitem}
 
 \title{Software Requirements Specification\\Olympiad Admission System}
 \author{Yashaswi Raj\\\texttt{yashaswir23@iitk.ac.in}}
-\date{\today}
+\date{\normalsize Version 1.0 \\ \today}
 
 \begin{document}
 
@@ -20,7 +22,7 @@
 % 1. Introduction
 \section{Introduction}
 \subsection{Purpose}
-This document specifies the requirements for the Olympiad Admission System, a web-based platform for managing student admissions based on Olympiad performance and preferences.
+This document specifies the requirements for the Olympiad Admission System, a web-based platform for managing student admissions based on Olympiad qualification and preferences.
 
 \subsection{Scope}
 The system supports:
@@ -41,7 +43,7 @@ The system supports:
     \item UX: User Experience
     \item SRS: Software Requirements Specification
 \end{itemize}
-
+\newpage
 % 2. Overall Description
 \section{Overall Description}
 \subsection{Product Perspective}
@@ -83,10 +85,9 @@ Intended for admission coordinators, faculty, and technical staff.
         \item Modern web browser (Chrome, Firefox, Safari, Edge)
         \item JavaScript enabled
         \item Minimum screen resolution: 1024x768
-        \item Internet connection for backend API access
     \end{itemize}
 \end{itemize}
-
+\newpage
 % 3. Specific Requirements
 \section{Specific Requirements}
 \subsection{Functional Requirements}
@@ -114,7 +115,6 @@ Intended for admission coordinators, faculty, and technical staff.
     \item Accessibility for keyboard navigation
     \item Real-time feedback for user actions
     \item Cross-browser compatibility
-    \item Mobile-friendly interface
 \end{enumerate}
 
 \subsection{Future Enhancements}
@@ -125,12 +125,12 @@ Intended for admission coordinators, faculty, and technical staff.
     \item Real-time updates for seat allocation
     \item Advanced analytics and reporting
 \end{itemize}
-
+\newpage
 \section{Appendix}
 \subsection{CSV Format Example}
 \begin{lstlisting}
-id,name,total_marks,positive_marks,maths_marks,physics_marks,chemistry_marks,imotc,ioitc,inpho,incho,inbo,preference_order
-1,John Doe,450,430,150,140,140,1,0,1,0,0,"CSE,MTH,ECO,SDS"
+id,name,total_marks,positive_marks,maths_marks,physics_marks,chemistry_marks,imotc,ioitc,inpho,incho,inbo,preference_order 
+1,John Doe,430,450,150,140,140,1,0,1,0,0,"CSE,MTH,ECO,SDS"
 \end{lstlisting}
 
 \subsection{Installation and Setup}
@@ -151,7 +151,7 @@ id,name,total_marks,positive_marks,maths_marks,physics_marks,chemistry_marks,imo
     \item Start the backend server:
     \begin{lstlisting}
     cd Backend
-    python app.py
+    python run.py
     \end{lstlisting}
     \item Start the frontend development server:
     \begin{lstlisting}

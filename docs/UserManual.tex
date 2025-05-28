@@ -2,6 +2,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage{graphicx}
 \usepackage{hyperref}
+\usepackage{newtxtext,newtxmath}
 \usepackage{listings}
 \usepackage{float}
 \usepackage{enumitem}
@@ -9,7 +10,7 @@
 \title{User Manual\\
        Olympiad Admission System}
 \author{Yashaswi Raj\\\texttt{yashaswir23@iitk.ac.in}}
-\date{\today}
+\date{\normalsize Version 1.0 \\ \today}
 
 \begin{document}
 \maketitle
@@ -217,7 +218,7 @@ If you encounter any issues:
     \item Start the backend server:
     \begin{lstlisting}
     cd Backend
-    python app.py
+    python run.py
     \end{lstlisting}
     \item Start the frontend development server:
     \begin{lstlisting}
