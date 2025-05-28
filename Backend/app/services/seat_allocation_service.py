@@ -1,85 +1,84 @@
-from typing import List, Dict, Any
-from collections import defaultdict
+from app.static_data.seatMatrix import seatMatrix
+from app.static_data.pool_program_map import pool_program_map
 
-class SeatAllocationService:
-    def __init__(self):
-        self.seat_capacity = {
-            'Computer Science': 50,
-            'Electrical Engineering': 40,
-            'Mechanical Engineering': 45,
-            'Civil Engineering': 35,
-            'Chemical Engineering': 30
-        }
+class Program:
 
-    def allocate_seats(self, ranking_data: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-        """
-        Allocate seats to students based on their rankings and preferences
-        """
-        # Sort students by rank
-        sorted_students = sorted(ranking_data, key=lambda x: x['rank'])
-        
-        # Initialize allocation results
-        allocation_results = []
-        allocated_students = set()
-        department_allocations = {dept: 0 for dept in self.seat_capacity.keys()}
-        
-        for student in sorted_students:
-            student_id = student['student_id']
-            preferences = student['preference_order']
-            
-            # Skip if preferences is a string, convert to list
-            if isinstance(preferences, str):
-                preferences = [p.strip() for p in preferences.split(',')]
-            
-            allocated = False
-            
-            # Try to allocate based on preferences
-            for preference in preferences:
-                if (department_allocations[preference] < self.seat_capacity[preference] and 
-                    student_id not in allocated_students):
-                    allocation_results.append({
-                        'student_id': student_id,
-                        'student_name': student['student_name'],
-                        'rank': student['rank'],
-                        'allocated_department': preference,
-                        'status': 'Allocated'
-                    })
-                    department_allocations[preference] += 1
-                    allocated_students.add(student_id)
-                    allocated = True
-                    break
-            
-            # If not allocated, mark as waitlisted
-            if not allocated:
-                allocation_results.append({
-                    'student_id': student_id,
-                    'student_name': student['student_name'],
-                    'rank': student['rank'],
-                    'allocated_department': None,
-                    'status': 'Waitlisted'
-                })
-        
-        return allocation_results
+    def __init__(self, pool_name, total_seats):
+        self.pool_name = pool_name
+        self.total_seats = int(total_seats)
+        self.vacant_seats = int(total_seats)
+        self.students_alloted = []
+        self.students_alloted_count = 0
+        self.closing_rank = float('inf') 
 
-    def get_allocation_summary(self, allocation_results: List[Dict[str, Any]]) -> Dict[str, Any]:
-        """
-        Generate a summary of the allocation results
-        """
-        total_students = len(allocation_results)
-        allocated_count = sum(1 for result in allocation_results if result['status'] == 'Allocated')
-        waitlisted_count = sum(1 for result in allocation_results if result['status'] == 'Waitlisted')
-        
-        # Count department-wise allocations
-        department_counts = defaultdict(int)
-        for result in allocation_results:
-            if result['status'] == 'Allocated' and result['allocated_department']:
-                department_counts[result['allocated_department']] += 1
-        
-        summary = {
-            'total_students': total_students,
-            'allocated_students': allocated_count,
-            'waitlisted_students': waitlisted_count,
-            'department_wise_allocation': dict(department_counts)
-        }
-        
-        return summary 
+class Student:
+    def __init__(self, student_id, student_name, rank, preferences):
+        self.student_id = student_id
+        self.student_name = student_name
+        self.rank = rank
+        self.preferences = preferences.strip().split(',')
+        self.pool_alloted = 'None'
+        self.program_alloted = 'None'
+
+    def increase_seats(self):
+        self.total_seats += 1
+
+def try_allocate_seats(student, program):
+    if program.closing_rank < student.rank:
+        return False
+    
+    if program.closing_rank == student.rank:
+        program.increase_seats()
+        program.vacant_seats += 1;
+    
+    program.students_alloted.append(student)
+    program.students_alloted_count += 1
+    program.vacant_seats -= 1
+    student.pool_alloted = program.pool_name
+    student.program_alloted = pool_program_map[program.pool_name]
+
+    if program.vacant_seats == 0:
+        program.closing_rank = student.rank
+
+    return True
+
+
+def try_preference_order(student, programName_to_programObj):
+    for preference in student.preferences:
+        if preference in pool_program_map:
+            program = programName_to_programObj[preference]
+            if try_allocate_seats(student, program):
+                return
+    return
+
+def generateStudentList(students):
+    return [{
+        'student_id': student.student_id, 
+        'student_name': student.student_name, 
+        'rank': student.rank, 
+        'pool_alloted': student.pool_alloted, 
+        'program_alloted': student.program_alloted
+    } for student in students]
+
+def generateProgramList(programs):
+    return [{
+        'pool': program.pool_name, 
+        'seats': program.total_seats, 
+        'students_alloted': program.students_alloted_count, 
+        'closing_rank': 'Unclosed' if program.closing_rank == float('inf') else program.closing_rank
+    } for program in programs]
+
+def generateSeatAllocation(data):
+    programName_to_programObj = {seat['pool'] : Program(seat['pool'], seat['seats']) for seat in seatMatrix} 
+    students = [Student(student['student_id'], student['student_name'], student['rank'], student['preference_order']) for student in data]
+    sorted_students = sorted(students, key=lambda x: x.rank)
+
+    for student in sorted_students:
+        try_preference_order(student, programName_to_programObj)
+
+    result = {
+        'student_seat_allocation': generateStudentList(students),
+        'program_seat_summary': generateProgramList(programName_to_programObj.values())
+    }
+
+    return result

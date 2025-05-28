@@ -33,6 +33,7 @@ const RankingPage = () => {
                     localStorage.setItem('validationData', JSON.stringify(validationData));
                 }
                 const data = await getRankingData(validationData);
+                localStorage.setItem('rankingData', JSON.stringify(data.rankings));
                 setRankingData(data.rankings);
             } catch (err) {
                 setError(err.message);

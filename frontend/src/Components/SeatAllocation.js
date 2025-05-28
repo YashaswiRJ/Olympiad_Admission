@@ -14,20 +14,22 @@ const SeatAllocation = () => {
   const handleGenerateAllocation = async () => {
     try {
       setIsLoading(true);
-      const savedData = localStorage.getItem('processedData');
+      const savedData = localStorage.getItem('rankingData');
       if (!savedData) {
         setError('No processed data found. Please upload and process data first.');
         return;
       }
 
-      const processedData = JSON.parse(savedData);
-      
+      const rankingData = JSON.parse(savedData);
+      console.log('rankingData', rankingData)
       const response = await generateSeatAllocation({
         exam_id: 'exam1',
-        processed_data: processedData.data
+        ranking_data: rankingData
       });
+      console.log('Data aaya ki nyi?');
+      console.log('response from backend', response)
 
-      setAllocationData(response);
+      setAllocationData(response.student_seat_allocation);
       setMessage('Seat allocation generated successfully!');
       setError('');
     } catch (err) {
@@ -46,10 +48,11 @@ const SeatAllocation = () => {
     const csvContent = [
       headers.join(','),
       ...allocationData.map(row => [
-        row.id,
-        row.name,
+        row.student_id,
+        row.student_name,
         row.rank,
         row.pool_allotted,
+        row.program_allotted,
         row.branch
       ].join(','))
     ].join('\n');
@@ -67,14 +70,15 @@ const SeatAllocation = () => {
 
   // Filter data based on search term
   const filteredData = allocationData.filter(item => 
-    item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    item.id.toString().includes(searchTerm)
+    item.student_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    item.student_id.toString().includes(searchTerm)
   );
 
   // Calculate pagination
   const indexOfLastEntry = currentPage * entriesPerPage;
   const indexOfFirstEntry = indexOfLastEntry - entriesPerPage;
   const currentEntries = filteredData.slice(indexOfFirstEntry, indexOfLastEntry);
+  console.log('currentEntries', currentEntries)
   const totalPages = Math.ceil(filteredData.length / entriesPerPage);
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
@@ -119,17 +123,18 @@ const SeatAllocation = () => {
                   <th>Name</th>
                   <th>Rank</th>
                   <th>Pool Allotted</th>
-                  <th>Branch</th>
+                  <th>Program Allotted</th>
                 </tr>
               </thead>
               <tbody>
                 {currentEntries.map((item, index) => (
+                  console.log('item', item),
                   <tr key={index}>
-                    <td>{item.id}</td>
-                    <td>{item.name}</td>
+                    <td>{item.student_id}</td>
+                    <td>{item.student_name}</td>
                     <td>{item.rank}</td>
-                    <td>{item.pool_allotted}</td>
-                    <td>{item.branch}</td>
+                    <td>{item.pool_alloted}</td>
+                    <td>{item.program_alloted}</td>
                   </tr>
                 ))}
               </tbody>

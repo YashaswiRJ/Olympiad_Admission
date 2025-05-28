@@ -1,17 +1,20 @@
 from flask import Blueprint, jsonify, request
-from ..services.seat_allocation_service import SeatAllocationService
+from ..services.seat_allocation_service import generateSeatAllocation
 
 bp = Blueprint('generate_seat_allocation', __name__)
 
-@bp.route('', methods=['POST', 'OPTIONS'])
-@bp.route('/', methods=['POST', 'OPTIONS'])
+@bp.route('', methods=['POST'])
+@bp.route('/', methods=['POST'])
 def generate_seat_allocation():
     if request.method == 'OPTIONS':
         return jsonify({}), 200
         
     try:
-        data = request.get_json().get('ranking_data')
-        result = SeatAllocationService.generate_seat_allocation(data)
+        print(request.get_json())
+        data = request.get_json().get('ranking_data').get('ranking_data')
+        print('Data retrived succesfully !', data[0])
+        result = generateSeatAllocation(data)
+        print('Successfully generated seat allocation !', result.get('program_seat_summary'))
         return jsonify(result)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
