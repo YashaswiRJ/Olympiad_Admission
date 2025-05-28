@@ -8,7 +8,7 @@
 
 \title{User Manual\\
        Olympiad Admission System}
-\author{Project Team}
+\author{Yashaswi Raj\\\texttt{yashaswir23@iitk.ac.in}}
 \date{\today}
 
 \begin{document}
@@ -23,9 +23,30 @@ This manual provides comprehensive guidance for using the Olympiad Admission Sys
 \section{Getting Started}
 \subsection{System Requirements}
 \begin{itemize}
-    \item Modern web browser (Chrome, Firefox, Safari, Edge)
-    \item JavaScript enabled
-    \item Minimum screen resolution: 1024x768
+    \item Backend Requirements:
+    \begin{itemize}
+        \item Python 3.8 or higher
+        \item pip (Python package manager)
+        \item Virtual environment (recommended)
+    \end{itemize}
+    \item Frontend Requirements:
+    \begin{itemize}
+        \item Node.js 16.0 or higher (for React 19.x compatibility)
+        \item npm (Node Package Manager) 8.0 or higher
+        \item Modern web browser (Chrome, Firefox, Safari, Edge)
+        \item JavaScript enabled
+        \item Minimum screen resolution: 1024x768
+        \item Internet connection for backend API access
+    \end{itemize}
+\end{itemize}
+
+\subsection{Frontend Dependencies}
+The frontend uses the following key dependencies (specified in package.json):
+\begin{itemize}
+    \item React 19.1.0 - Core UI library
+    \item React Router DOM 7.6.0 - For routing
+    \item React Scripts 5.0.1 - For development and build tools
+    \item Testing libraries for unit testing
 \end{itemize}
 
 \subsection{Accessing the System}
@@ -66,6 +87,7 @@ The dashboard contains four main cards:
     \item First row must contain column headers
     \item Data must be comma-separated
     \item File size should not exceed 10MB
+    \item Required columns: id, name, total\_marks, positive\_marks, maths\_marks, physics\_marks, chemistry\_marks, imotc, ioitc, inpho, incho, inbo, preference\_order
 \end{itemize}
 
 \subsection{Managing CSV Data}
@@ -93,6 +115,30 @@ The dashboard contains four main cards:
     \item Save the final allocation
 \end{enumerate}
 
+\section{Program Seat Summary}
+\subsection{Viewing Program Summaries}
+\begin{enumerate}
+    \item Access the program summary section from the seat allocation page
+    \item View program-wise seat allocation details
+    \item Check opening and closing ranks for each program
+    \item Review vacant and filled seats
+\end{enumerate}
+
+\subsection{Exporting Program Summaries}
+\begin{enumerate}
+    \item Click the "Download CSV" button in the program summary section
+    \item The CSV file will include:
+    \begin{itemize}
+        \item Pool name
+        \item Program name
+        \item Total seats
+        \item Allotted seats
+        \item Vacant seats
+        \item Opening rank
+        \item Closing rank
+    \end{itemize}
+\end{enumerate}
+
 \section{Seat Matrix Management}
 \subsection{Managing Seat Matrix}
 \begin{enumerate}
@@ -116,6 +162,12 @@ The dashboard contains four main cards:
         \item Check browser storage settings
         \item Clear browser cache
         \item Refresh the page
+    \end{itemize}
+    \item Program Summary Issues
+    \begin{itemize}
+        \item Verify seat matrix data
+        \item Check student preferences
+        \item Ensure proper ranking generation
     \end{itemize}
 \end{itemize}
 
@@ -143,6 +195,35 @@ If you encounter any issues:
     \item Check the troubleshooting section
     \item Contact system administrator
     \item Report bugs through the appropriate channels
+    \item Email: yashaswir23@iitk.ac.in
 \end{itemize}
+
+\section{Installation and Setup}
+\subsection{System Setup}
+\begin{enumerate}
+    \item Clone the repository
+    \item Backend Setup:
+    \begin{lstlisting}
+    cd Backend
+    python -m venv venv
+    source venv/bin/activate  # On Windows: venv\Scripts\activate
+    pip install -r requirements.txt
+    \end{lstlisting}
+    \item Frontend Setup:
+    \begin{lstlisting}
+    cd frontend
+    npm install  # This will install all dependencies from package.json
+    \end{lstlisting}
+    \item Start the backend server:
+    \begin{lstlisting}
+    cd Backend
+    python app.py
+    \end{lstlisting}
+    \item Start the frontend development server:
+    \begin{lstlisting}
+    cd frontend
+    npm start  # This will start the React development server
+    \end{lstlisting}
+\end{enumerate}
 
 \end{document} 

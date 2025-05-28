@@ -30,7 +30,7 @@
 
 \title{Technical Design Document\\
        Olympiad Admission System}
-\author{IIT Kanpur}
+\author{Yashaswi Raj\\\texttt{yashaswir23@iitk.ac.in}}
 \date{\today}
 
 \begin{document}
@@ -52,6 +52,7 @@ App
     ├── ValidationPreference
     ├── RankingPage
     ├── SeatAllocation
+    │   └── ProgramSummary
     └── UploadSeatMatrix
 \end{verbatim}
 
@@ -115,10 +116,20 @@ const Sidebar = () => {
     \item Provides search and pagination
 \end{itemize}
 
-\subsection{SeatAllocation and UploadSeatMatrix}
+\subsection{SeatAllocation Component}
 \begin{itemize}
     \item Upload and manage seat matrix
     \item Generate and review seat allocations
+    \item Display program seat summary with opening and closing ranks
+    \item Export program summaries to CSV
+\end{itemize}
+
+\subsection{ProgramSummary Component}
+\begin{itemize}
+    \item Displays program-wise seat allocation details
+    \item Shows opening and closing ranks
+    \item Provides CSV export functionality
+    \item Responsive card-based layout
 \end{itemize}
 
 \section{Data Flow}
@@ -126,6 +137,8 @@ const Sidebar = () => {
     \item CSV Upload → Validation (backend) → Store validation data in localStorage
     \item Ranking Generation (backend) using validation data
     \item Seat Allocation using rankings and seat matrix
+    \item Program Summary generation with opening and closing ranks
+    \item CSV export of program summaries
 \end{enumerate}
 
 \section{Storage Implementation}
@@ -142,6 +155,8 @@ const validationData = JSON.parse(localStorage.getItem('validationData'));
     \item Paginated and searchable tables
     \item Clear error and success notifications
     \item Accessibility for keyboard navigation
+    \item Card-based layout for program summaries
+    \item CSV export functionality
 \end{itemize}
 
 \section{Error Handling}
@@ -149,6 +164,7 @@ const validationData = JSON.parse(localStorage.getItem('validationData'));
     \item File upload and CSV validation errors
     \item Backend/API errors
     \item Data persistence and recovery
+    \item Program summary generation errors
 \end{itemize}
 
 \section{Testing Strategy}
@@ -156,6 +172,8 @@ const validationData = JSON.parse(localStorage.getItem('validationData'));
     \item Unit tests for CSV parsing and validation
     \item Integration tests for API communication
     \item UI tests for all major workflows
+    \item Program summary generation tests
+    \item CSV export functionality tests
 \end{itemize}
 
 \section{Deployment}
@@ -163,6 +181,32 @@ const validationData = JSON.parse(localStorage.getItem('validationData'));
     \item Build with npm run build
     \item Deploy static files to web server
     \item Ensure backend API is accessible
+    \item Configure CORS settings
 \end{itemize}
+
+\section{Installation and Setup}
+\begin{enumerate}
+    \item Clone the repository
+    \item Install backend dependencies:
+    \begin{lstlisting}
+    cd Backend
+    pip install -r requirements.txt
+    \end{lstlisting}
+    \item Install frontend dependencies:
+    \begin{lstlisting}
+    cd frontend
+    npm install
+    \end{lstlisting}
+    \item Start the backend server:
+    \begin{lstlisting}
+    cd Backend
+    python app.py
+    \end{lstlisting}
+    \item Start the frontend development server:
+    \begin{lstlisting}
+    cd frontend
+    npm start
+    \end{lstlisting}
+\end{enumerate}
 
 \end{document} 
