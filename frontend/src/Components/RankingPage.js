@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { getRankingData, validatePreferences, getProcessedData } from '../services/service';
+import { getRankingData, validatePreferences, getProcessedData, generateSeatAllocation } from '../services/service';
+import { useNavigate } from 'react-router-dom';
 import '../Styles/RankingPage.css';
 
 const RankingPage = () => {
+    const navigate = useNavigate();
     const [rankingData, setRankingData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -57,6 +59,44 @@ const RankingPage = () => {
 
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
+    const handleDownloadCSV = () => {
+        const headers = ['Rank', 'Student ID', 'Name', 'Preference Order'];
+        const csvData = filteredData.map(row => [
+            row.rank,
+            row.student_id,
+            row.student_name,
+            Array.isArray(row.preference_order) ? row.preference_order.join(',') : row.preference_order
+        ]);
+
+        const csvContent = [
+            headers.join(','),
+            ...csvData.map(row => row.join(','))
+        ].join('\n');
+
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', 'student_rankings.csv');
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
+    const handleGenerateSeatAllocation = async () => {
+        try {
+            setLoading(true);
+            const result = await generateSeatAllocation(rankingData);
+            // Store the result in localStorage for the next page
+            localStorage.setItem('seatAllocationData', JSON.stringify(result));
+            navigate('/generate-seat-allocation');
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     if (loading) {
         return <div className="loading">Loading rankings...</div>;
     }
@@ -78,6 +118,14 @@ const RankingPage = () => {
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="search-input"
                 />
+                <div className="action-buttons">
+                    <button onClick={handleDownloadCSV} className="action-btn">
+                        Download CSV
+                    </button>
+                    <button onClick={handleGenerateSeatAllocation} className="action-btn">
+                        Generate Seat Allocation
+                    </button>
+                </div>
             </div>
 
             {/* Rankings Table */}

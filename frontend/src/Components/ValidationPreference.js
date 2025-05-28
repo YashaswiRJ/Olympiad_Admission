@@ -51,6 +51,7 @@ const ValidationPreference = () => {
       setError(null);
       
       const response = await generateRankings(validationResult);
+      localStorage.setItem('rankingData', JSON.stringify(response.rankings));
       saveRankingData(response.rankings);
       navigate('/ranking');
     } catch (err) {

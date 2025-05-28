@@ -76,3 +76,16 @@ export const getRankingData = async (validationData) => {
         throw new Error(error.response?.data?.error || 'Failed to fetch ranking data');
     }
 };
+
+export const generateSeatAllocation = async (rankingData) => {
+    try {
+        const response = await axios.post(
+            `${API_URL}/api/generate-seat-allocation`,
+            { ranking_data: rankingData }
+        );
+        return response.data;
+    } catch (error) {
+        console.error('Error generating seat allocation:', error);
+        throw new Error(error.response?.data?.error || 'Failed to generate seat allocation');
+    }
+};

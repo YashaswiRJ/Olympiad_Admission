@@ -17,9 +17,10 @@ def create_app(config_class=Config):
     })
     
     # Register blueprints
-    from .routes import main, api
+    from .routes import main, api, seat_allocation
     app.register_blueprint(main.bp)
     app.register_blueprint(api.bp, url_prefix='/api')
+    app.register_blueprint(seat_allocation.bp, url_prefix='/api/generate-seat-allocation')
     
     # Register error handlers
     from .errors import register_error_handlers
