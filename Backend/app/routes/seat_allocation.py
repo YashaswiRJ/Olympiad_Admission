@@ -10,9 +10,7 @@ def generate_seat_allocation():
         return jsonify({}), 200
         
     try:
-        print(request.get_json())
         data = request.get_json().get('ranking_data')
-        print('Data retrived succesfully !', data[0])
         result = generateSeatAllocation(data)
         print('Successfully generated seat allocation !', result.get('program_seat_summary'))
         return jsonify(result)

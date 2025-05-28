@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { generateSeatAllocation } from '../services/service';
+import ProgramSummary from './ProgramSummary';
 import '../Styles/SeatAllocation.css';
 
 const SeatAllocation = () => {
@@ -10,6 +11,7 @@ const SeatAllocation = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [entriesPerPage] = useState(10);
   const [isLoading, setIsLoading] = useState(false);
+  const [programSummary, setProgramSummary] = useState([]);
 
   useEffect(() => {
     const fetchData = () => {
@@ -18,6 +20,7 @@ const SeatAllocation = () => {
         if (storedData) {
           const parsedData = JSON.parse(storedData);
           setAllocationData(parsedData.student_seat_allocation);
+          setProgramSummary(parsedData.program_seat_summary);
         } else {
           console.warn('No allocation data found in localStorage');
         }
@@ -43,8 +46,10 @@ const SeatAllocation = () => {
       console.log('rankingData', rankingData)
       const response = await generateSeatAllocation(rankingData);
       console.log('response from backend', response)
+      localStorage.setItem('seatAllocationData', JSON.stringify(response));
 
       setAllocationData(response.student_seat_allocation);
+      setProgramSummary(response.program_seat_summary);
       setMessage('Seat allocation generated successfully!');
       setError('');
     } catch (err) {
@@ -56,7 +61,7 @@ const SeatAllocation = () => {
     }
   };
 
-  const handleDownloadCSV = () => {
+  const handleDownloadStudentCSV = () => {
     if (!allocationData.length) return;
 
     const headers = ['Rank', 'ID', 'Name', 'Pool Allotted', 'Program Allotted'];
@@ -76,7 +81,35 @@ const SeatAllocation = () => {
     const link = document.createElement('a');
     const url = URL.createObjectURL(blob);
     link.setAttribute('href', url);
-    link.setAttribute('download', 'seat_allocation.csv');
+    link.setAttribute('download', 'student_seat_allocation.csv');
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const handleDownloadProgramCSV = () => {
+    if (!programSummary.length) return;
+
+    const headers = ['Pool', 'Program Name', 'Total Seats', 'Allotted', 'Vacant', 'Opening Rank', 'Closing Rank'];
+    const csvContent = [
+      headers.join(','),
+      ...programSummary.map(program => [
+        program.pool_name,
+        program.program_name,
+        program.seats,
+        program.students_alloted,
+        program.seats - program.students_alloted,
+        program.opening_rank,
+        program.closing_rank
+      ].join(','))
+    ].join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'program_seat_summary.csv');
     link.style.visibility = 'hidden';
     document.body.appendChild(link);
     link.click();
@@ -93,7 +126,6 @@ const SeatAllocation = () => {
   const indexOfLastEntry = currentPage * entriesPerPage;
   const indexOfFirstEntry = indexOfLastEntry - entriesPerPage;
   const currentEntries = filteredData.slice(indexOfFirstEntry, indexOfLastEntry);
-  console.log('currentEntries', currentEntries)
   const totalPages = Math.ceil(filteredData.length / entriesPerPage);
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
@@ -125,8 +157,8 @@ const SeatAllocation = () => {
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
-            <button className="download-btn" onClick={handleDownloadCSV}>
-              Download CSV
+            <button className="download-btn" onClick={handleDownloadStudentCSV}>
+              Download Student CSV
             </button>
           </div>
 
@@ -143,7 +175,6 @@ const SeatAllocation = () => {
               </thead>
               <tbody>
                 {currentEntries.map((item, index) => (
-                  console.log('item', item),
                   <tr key={index}>
                     <td>{item.rank}</td>
                     <td>{item.student_id}</td>
@@ -167,6 +198,17 @@ const SeatAllocation = () => {
               </button>
             ))}
           </div>
+        </div>
+      )}
+
+      {programSummary.length > 0 && (
+        <div className="program-summary-wrapper">
+          <div className="program-summary-header">
+            <button className="download-btn" onClick={handleDownloadProgramCSV}>
+              Download Program Summary CSV
+            </button>
+          </div>
+          <ProgramSummary programData={programSummary} />
         </div>
       )}
     </div>

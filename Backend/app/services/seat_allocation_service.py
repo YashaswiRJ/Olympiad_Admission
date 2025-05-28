@@ -9,6 +9,7 @@ class Program:
         self.vacant_seats = int(total_seats)
         self.students_alloted = []
         self.students_alloted_count = 0
+        self.opening_rank = 0
         self.closing_rank = float('inf') 
 
 class Student:
@@ -31,6 +32,9 @@ def try_allocate_seats(student, program):
         program.increase_seats()
         program.vacant_seats += 1;
     
+    if program.opening_rank == 0:
+        program.opening_rank = student.rank
+
     program.students_alloted.append(student)
     program.students_alloted_count += 1
     program.vacant_seats -= 1
@@ -62,9 +66,11 @@ def generateStudentList(students):
 
 def generateProgramList(programs):
     return [{
-        'pool': program.pool_name, 
+        'pool_name': program.pool_name, 
         'seats': program.total_seats, 
         'students_alloted': program.students_alloted_count, 
+        'opening_rank': 'Unopted' if program.opening_rank == 0 else program.opening_rank,
+        'program_name': pool_program_map[program.pool_name],
         'closing_rank': 'Unclosed' if program.closing_rank == float('inf') else program.closing_rank
     } for program in programs]
 

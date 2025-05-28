@@ -89,7 +89,6 @@ const RankingPage = () => {
             setLoading(true);
             const result = await generateSeatAllocation(rankingData);
             console.log('result from ranking page', result)
-            // Store the result in localStorage for the next page
             localStorage.setItem('seatAllocationData', JSON.stringify(result));
             navigate('/generate-seat-allocation');
         } catch (err) {

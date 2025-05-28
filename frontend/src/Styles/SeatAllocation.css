@@ -218,4 +218,14 @@ tr:hover {
   .generate-btn, .download-btn {
     width: 100%;
   }
+}
+
+.program-summary-wrapper {
+  margin-top: 2rem;
+}
+
+.program-summary-header {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
 } 
