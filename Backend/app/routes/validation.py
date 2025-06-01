@@ -18,8 +18,8 @@ def validate_preferences():
 def generate_rankings_route():
     try:
         validation_data = request.json.get('validation_data', {})
-        print('============================', validation_data, 'yeh toh raah')
         result = generate_rankings(validation_data)
+        # print(result, 'aakhir aa hi gya')
         return jsonify(result)
     except Exception as e:
         print('Error generating rankings:', e)

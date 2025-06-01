@@ -6,6 +6,7 @@ import SeatAllocation from './Components/SeatAllocation';
 import Sidebar from './Components/Sidebar';
 import ValidationPreference from './Components/ValidationPreference';
 import RankingPage from './Components/RankingPage';
+import UploadSeatMatrix from './Components/UploadSeatMatrix';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
             <Route path="/validate" element={<ValidationPreference />} />
             <Route path="/ranking" element={<RankingPage />} />
             <Route path="/generate-seat-allocation" element={<SeatAllocation />} />
+            <Route path="/upload-seat-matrix" element={<UploadSeatMatrix />} />
           </Routes>
         </div>
       </div>

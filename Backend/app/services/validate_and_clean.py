@@ -2,12 +2,15 @@ from app.static_data.olympiad_requirement import requirement_olympiad
 from copy import deepcopy
 
 def process_student(student):
+    # Process the student data
     student_id = student['id']
     student_name = student['name']
     preference_string = student['preference_order']
-    preference_list = [pref.strip() for pref in preference_string.split(',')]
-    final_preference_order = [pref for pref in preference_list if student.get(requirement_olympiad.get(pref), '0') == '1']
-    removed_preference_order = [pref for pref in preference_list if student.get(requirement_olympiad.get(pref), '0') == '0']
+    preference_list = [pref.strip() for pref in preference_string.split(',')] # split the preference string into a list of preferences
+    final_preference_order = [pref for pref in preference_list if student.get(requirement_olympiad.get(pref), '0') == '1'] # filter the preferences to only include the ones that are required
+    removed_preference_order = [pref for pref in preference_list if student.get(requirement_olympiad.get(pref), '0') == '0'] # filter the preferences to only include the ones that are not required
+
+    # Return the processed student data
     return {
         'student_id': student_id,
         'student_name': student_name,
@@ -21,23 +24,16 @@ def process_student(student):
 
 
 def validate_and_clean_students(students):
-    """
-    Validate and clean student data. This is a placeholder for the actual logic.
-    Returns a dictionary containing the validation results.
-    """
-    # print('Processing students in validate_and_clean_students:', students)
-    # TODO: Implement actual validation and cleaning logic
-    sample_result = {
+    # Process the student data  
+    validated_result = {
         'received_students': len(students),
         'validation_result': [process_student(student) for student in students]
     }
-    return sample_result
+    return validated_result
 
-from copy import deepcopy
 
 def generate_rankings(validation_data):
     # Create a copy so original is not modified
-    print('validation_data', validation_data)
     data = deepcopy(validation_data)
     
     # Helper to parse and sort
@@ -53,11 +49,11 @@ def generate_rankings(validation_data):
     sorted_data = sorted(data, key=sort_key)
     
     # Assign ranks (equal scores get same rank)
-    rankings = []
-    current_rank = 1
-    for i, student in enumerate(sorted_data):
-        if i > 0:
-            prev = sorted_data[i - 1]
+    rankings = [] # list to store the rankings
+    current_rank = 1 # current rank
+    for i, student in enumerate(sorted_data): # enumerate over the sorted data
+        if i > 0: 
+            prev = sorted_data[i - 1] # previous student        
             # Check if any field differs from previous student
             if any([
                 student['total_marks'] != prev['total_marks'],
@@ -67,6 +63,7 @@ def generate_rankings(validation_data):
             ]):
                 current_rank = i + 1
         
+        # Append the student to the rankings list
         rankings.append({
             'student_id': student['student_id'],
             'student_name': student['student_name'],
@@ -74,6 +71,7 @@ def generate_rankings(validation_data):
             'preference_order': student['final_preference_order']
         })
 
+    # Return the rankings
     return {
         'received_students': len(validation_data),
         'rankings': rankings

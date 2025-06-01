@@ -6,6 +6,7 @@ id,name,total_marks,positive_marks,maths_marks,physics_marks,chemistry_marks,imo
 9,Karthik Iyer,403,410,142,127,134,1,1,1,1,1,"CSE-I,MTH,ECO,SDS"
 15,Varun Joshi,403,411,107,147,149,0,1,0,0,0,"CSE-I,MTH,SDS,ECO"
 25,Pranav Krishnan,408,412,137,131,140,1,1,1,0,0,"CSE-M,MTH,ECO,SDS"
+41,Rajendra Singh,408,412,137,131,140,1,1,1,0,0,"CSE-M,CSE-I,ECO,SDS"
 21,Aryan Shah,415,428,141,142,132,1,1,0,1,0,"CSE-M,MTH,ECO,SDS"
 26,Ishita Bansal,397,411,141,125,131,1,0,0,0,1,"BSBE-S,CHM,MTH,ECO"
 17,Akash Mishra,395,399,138,108,149,1,1,1,0,0,"CSE-M,MTH,ECO,SDS"

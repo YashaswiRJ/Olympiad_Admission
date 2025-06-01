@@ -25,6 +25,12 @@ const Dashboard = () => {
       icon: '🎓'
     },
     {
+      title: 'Generate and View Seat Allocation',
+      description: 'Generates the seat allocation of the students based on their performance in the test and displays the results',
+      path: '/generate-seat-allocation',
+      icon: '🎯'
+    },
+    {
       title: 'Upload Seat Matrix',
       description: 'Manage and upload seat allocation matrix',
       path: '/upload-seat-matrix',

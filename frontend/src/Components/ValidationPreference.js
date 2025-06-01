@@ -38,6 +38,7 @@ const ValidationPreference = () => {
       
       const response = await validatePreferences(savedData.data);
       setValidationResult(response.validation_result);
+      localStorage.setItem('validationData', JSON.stringify(response.validation_result));
     } catch (err) {
       setError(err.message || 'An error occurred during validation');
     } finally {
@@ -51,6 +52,7 @@ const ValidationPreference = () => {
       setError(null);
       
       const response = await generateRankings(validationResult);
+      console.log(validationResult, '=====', response);
       localStorage.setItem('rankingData', JSON.stringify(response.rankings));
       saveRankingData(response.rankings);
       navigate('/ranking');
