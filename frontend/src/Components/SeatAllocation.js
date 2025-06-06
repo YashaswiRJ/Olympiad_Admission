@@ -64,16 +64,31 @@ const SeatAllocation = () => {
   const handleDownloadStudentCSV = () => {
     if (!allocationData.length) return;
 
-    const headers = ['Rank', 'ID', 'Name', 'Pool Allotted', 'Program Allotted'];
+    const headers = ['Rank', 'ID', 'Name', 'Pool Allotted', 'Program Allotted', 'Preferences Number'];
+
+    // Function to escape CSV fields (wrap in quotes if contains comma or quote)
+    const escapeCsvField = (field) => {
+      if (field == null) return '';
+      const str = String(field);
+      if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+        return `"${str.replace(/"/g, '""')}"`; // escape quotes by doubling them
+      }
+      return str;
+    };
+
+    // Sort allocationData alphabetically by student_name
+    const sortedData = [...allocationData].sort((a, b) =>
+      a.student_name.localeCompare(b.student_name)
+    );
     const csvContent = [
       headers.join(','),
-      ...allocationData.map(row => [
-        row.rank,
-        row.student_id,
-        row.student_name,
-        row.pool_alloted,
-        row.program_alloted,
-        row.branch
+      ...sortedData.map(row => [
+        escapeCsvField(row.rank),
+        escapeCsvField(row.student_id),
+        escapeCsvField(row.student_name),
+        escapeCsvField(row.pool_alloted),
+        escapeCsvField(row.program_alloted),
+        escapeCsvField(row.preference_number)
       ].join(','))
     ].join('\n');
 
@@ -91,17 +106,29 @@ const SeatAllocation = () => {
   const handleDownloadProgramCSV = () => {
     if (!programSummary.length) return;
 
-    const headers = ['Pool', 'Program Name', 'Total Seats', 'Allotted', 'Vacant', 'Opening Rank', 'Closing Rank'];
+    const headers = ['Pool', 'Program Name', 'Total Seats', 'Allotted', 'Vacant', 'Opening Rank', 'Closing Rank', 'Supernumerary Seats'];
+
+    // Function to escape CSV fields (wrap in quotes if contains comma or quote)
+    const escapeCsvField = (field) => {
+      if (field == null) return '';
+      const str = String(field);
+      if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+        return `"${str.replace(/"/g, '""')}"`; // escape quotes by doubling them
+      }
+      return str;
+    };
+
     const csvContent = [
       headers.join(','),
       ...programSummary.map(program => [
-        program.pool_name,
-        program.program_name,
-        program.seats,
-        program.students_alloted,
-        program.seats - program.students_alloted,
-        program.opening_rank,
-        program.closing_rank
+        escapeCsvField(program.pool_name),
+        escapeCsvField(program.program_name),
+        escapeCsvField(program.seats),
+        escapeCsvField(program.students_alloted),
+        escapeCsvField(program.seats - program.students_alloted),
+        escapeCsvField(program.opening_rank),
+        escapeCsvField(program.closing_rank),
+        escapeCsvField(program.supernumerary_seats)
       ].join(','))
     ].join('\n');
 
@@ -171,6 +198,7 @@ const SeatAllocation = () => {
                   <th>Name</th>
                   <th>Pool Allotted</th>
                   <th>Program Allotted</th>
+                  <th>Preference Number</th>
                 </tr>
               </thead>
               <tbody>
@@ -181,6 +209,7 @@ const SeatAllocation = () => {
                     <td>{item.student_name}</td>
                     <td>{item.pool_alloted}</td>
                     <td>{item.program_alloted}</td>
+                    <td>{item.preference_number}</td>
                   </tr>
                 ))}
               </tbody>

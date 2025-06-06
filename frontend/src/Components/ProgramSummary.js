@@ -39,6 +39,10 @@ const ProgramSummary = ({ programData }) => {
                 <span className="label">Closing Rank:</span>
                 <span className="value">{program.closing_rank}</span>
               </div>
+              <div className="detail-row">
+                <span className="label">Supernumerary Seats Added:</span>
+                <span className="value">{program.supernumerary_seats}</span>
+              </div>
               {program.student_list && (
                 <div className="detail-row student-list">
                   <span className="label">Allotted Students:</span>

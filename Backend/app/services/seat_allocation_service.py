@@ -11,9 +11,11 @@ class Program:
         self.students_alloted_count = 0
         self.opening_rank = 0
         self.closing_rank = float('inf') 
+        self.supernumerary_seats = 0
 
     def increase_seats(self):
         self.total_seats += 1
+        self.supernumerary_seats += 1
 
 
 class Student:
@@ -22,13 +24,14 @@ class Student:
         self.student_id = student_id
         self.student_name = student_name
         self.rank = rank
-        self.preferences = preferences.strip().split(',')
+        self.preferences = [p.strip() for p in preferences.strip().split(',')]
         self.pool_alloted = 'None'
         self.program_alloted = 'None'
+        self.preference_number = 'None';
 
 
 # Try to allocate seats to a student based on their preference order
-def try_allocate_seats(student, program):
+def try_allocate_seats(student, program, preference_number):
     if program.closing_rank < student.rank: # if the closing rank of the program is less than the rank of the student, then return False
         return False
     
@@ -44,6 +47,7 @@ def try_allocate_seats(student, program):
     program.vacant_seats -= 1 # decrement the number of vacant seats in the program
     student.pool_alloted = program.pool_name # set the pool alloted to the program
     student.program_alloted = pool_program_map[program.pool_name] # set the program alloted to the program
+    student.preference_number = preference_number
 
     if program.vacant_seats == 0: # if the number of vacant seats in the program is 0, then set the closing rank of the program to the rank of the student          
         program.closing_rank = student.rank
@@ -54,10 +58,10 @@ def try_allocate_seats(student, program):
 # Try to allocate seats to a student based on their preference order
 def try_preference_order(student, programName_to_programObj):
     # Try to allocate seats to a student based on their preference order
-    for preference in student.preferences: # preference is a string
+    for index, preference in enumerate(student.preferences): # preference is a string
         if preference in pool_program_map: # preference is a key in pool_program_map
             program = programName_to_programObj[preference] # program is a Program object
-            if try_allocate_seats(student, program): # try to allocate seats to the student
+            if try_allocate_seats(student, program, index+1):
                 return
     return
 
@@ -68,7 +72,8 @@ def generateStudentList(students):
         'student_name': student.student_name, 
         'rank': student.rank, 
         'pool_alloted': student.pool_alloted, 
-        'program_alloted': student.program_alloted
+        'program_alloted': student.program_alloted,
+        'preference_number': student.preference_number
     } for student in students]
 
 # Generate a list of programs with their seat allocation details
@@ -79,7 +84,8 @@ def generateProgramList(programs):
         'students_alloted': program.students_alloted_count, 
         'opening_rank': 'Unopted' if program.opening_rank == 0 else program.opening_rank,
         'program_name': pool_program_map[program.pool_name],
-        'closing_rank': 'Unclosed' if program.closing_rank == float('inf') else program.closing_rank
+        'closing_rank': 'Unclosed' if program.closing_rank == float('inf') else program.closing_rank,
+        'supernumerary_seats': program.supernumerary_seats
     } for program in programs]
 
 def generateSeatAllocation(data):

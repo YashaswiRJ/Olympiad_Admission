@@ -12,7 +12,8 @@ def generate_seat_allocation():
     try:
         data = request.get_json().get('ranking_data')
         result = generateSeatAllocation(data)
-        print('Successfully generated seat allocation !', result.get('program_seat_summary'))
+        # print(result.get('student_seat_allocation'))
+        # print('Successfully generated seat allocation !', result.get('program_seat_summary'))
         return jsonify(result)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
